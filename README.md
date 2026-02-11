@@ -23,6 +23,7 @@ Strengthen conceptual depth and practical application of Data Structures through
 
 | Day | Date | Focus Area |
 |------|--------|------------|
+| Day 1 | 11 Feb | Arrays (Fixed Size) |
 | Day 2 | 12 Feb | Arrays (Dynamic Growth) |
 | Day 3 | 13 Feb (Fri) | Linked List (Basic) |
 | Day 4 | 16 Feb (Mon) | Linked List (System Constraints) |
@@ -40,6 +41,23 @@ Strengthen conceptual depth and practical application of Data Structures through
 ---
 
 # Week 1 – Basics & Simple Applications
+
+## Day 1 (11 Feb) – Arrays (Fixed Size)
+
+**Concept:** Array, fixed size, index-based access  
+**Example Scenario:** Flight booking seat map (300 seats)
+
+### Exercise
+- Create an array of 300 seats (0 = empty, 1 = booked)  
+- Display available seats  
+- Book a seat by entering seat number  
+
+### Thinking Questions
+- What if the number of seats is unknown?  
+- How to handle multiple bookings at the same time?  
+- Would a linked list be better in some cases?  
+
+---
 
 ## Day 2 (12 Feb) – Arrays (Dynamic Growth)
 
