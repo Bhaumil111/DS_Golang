@@ -6,34 +6,42 @@ import (
 
 const maxNoOfSeats = 300
 
-// creating a struct so i can extended it later and create method which attach type
+// creating a struct so i can be easily extensible in future 
 type FlightData struct {
 	Data [maxNoOfSeats]bool // Taking bool is beneficial it take only 1 byte
 }
-
-func (flightData *FlightData) display() {
-
+// creating display functions which display total available seats and also print all available seats
+func (flightData *FlightData) listAvailableSeats() {
 	fmt.Printf("List of available seats\n")
-	count := 0
 	for id, val := range flightData.Data {
 		if !val { // means false
-
-			count++
 			fmt.Printf("%v ", id+1)
 		}
 	}
 	fmt.Printf("\n")
-
-	fmt.Println("Total no of available seats ", count)
-
 }
 
+
+// following function to calculate total no of seats and using pointer to save memory as  i need to do modification based on updated flight data
+func(flightData * FlightData) totalAvailableSeats(){
+
+	total:=0
+
+	for i:=0;i<300;i++{
+
+		if !flightData.Data[i]{
+			total++
+		}
+	}
+
+	fmt.Println("Total no of available Seats are",total)
+}
 func (flightData *FlightData) bookSeat(seat int) error {
 	if seat < 1 || seat > 300 {
-		fmt.Errorf("Please enter valid seat number\n")
+		return fmt.Errorf("Please enter valid seat number\n")
 
 	} else if flightData.Data[seat-1] {
-		fmt.Errorf("This seat is already booked . Enter new seat number\n")
+		return fmt.Errorf("This seat is already booked . Enter new seat number\n")
 	} else {
 		flightData.Data[seat-1] = true
 	}
@@ -52,27 +60,38 @@ func main() {
 
 	for {
 
-		fmt.Printf("1: For list available seats\n 2: Book Seat\n 3: Exit Program\n Enter your command: ")
+		fmt.Printf("1: List all available seats \n2: Book Seat\n3: Total no of available seats\n4: Exit Program\nEnter your command: ")
 
-		//fmt.Scan(&input)
-
-		if err, _ := fmt.Scanln(&input); err != nil {
-
+		if _ , err := fmt.Scanln(&input) ; err != nil{
+			fmt.Printf("Pleasee enter valid input\n")
+			continue
 		}
 		switch input {
+
 		case 1:
-			flightData.display() // Display all the flight data
+			flightData.listAvailableSeats() // Display all the flight data
 		case 2:
 			var SeatNumber int
-			fmt.Println("Enter the Seat Number ")
-			fmt.Scan(&SeatNumber)
-			flightData.bookSeat(SeatNumber) // Book Seat
+			fmt.Printf("Enter Seat Number: ")
+			if _, err := fmt.Scanln(&SeatNumber); err !=nil{ // err case 
+				fmt.Printf("Please enter valid seat number")
+				continue
+
+			}
+			if err:= flightData.bookSeat(SeatNumber); err !=nil{
+
+				fmt.Printf("Failed to book ticket %v\n", err)
+				continue
+
+			}
+
 		case 3:
-			fmt.Println("Thank you for visiting")
+			flightData.totalAvailableSeats() // total no of available seats
+		case 4:
+			fmt.Println("Thank you for visiting") //exit
 			return
 		}
 	}
 
-	return
 
 }
