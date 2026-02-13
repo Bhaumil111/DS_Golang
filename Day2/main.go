@@ -76,8 +76,6 @@ func main() {
 	//videoBuffer.lengthOfBuffer()
 	videoBuffer.addPacket(packet2)
 	//videoBuffer.lengthOfBuffer()
-	videoBuffer.addPacket(packet3)
-	//videoBuffer.lengthOfBuffer()
 
 	videoBuffer.playVideo()
 
