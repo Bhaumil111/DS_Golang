@@ -140,6 +140,6 @@ func main() {
 	//songPlaylist.deleteSong(1) // Tried to delete middle  element
 	//songPlaylist.DisplayPlaylist()
 
-	songPlaylist.deleteSong(10) // Tried to delete wrong element
-	songPlaylist.DisplayPlaylist()
+	//songPlaylist.deleteSong(10) // Tried to delete wrong element
+	//songPlaylist.DisplayPlaylist()
 }
