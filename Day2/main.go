@@ -66,11 +66,6 @@ func main() {
 		SequenceNo: 3,
 		Duration:   3,
 	}
-	packet3 := videoPacket{
-		Data:       "I am working at Motadata",
-		SequenceNo: 2,
-		Duration:   2,
-	}
 
 	videoBuffer.addPacket(packet1)
 	//videoBuffer.lengthOfBuffer()
