@@ -61,7 +61,7 @@ func (sp *SongPlaylist) addBack(songData Song) {
 		sp.Tail.Next = newSongNode
 		sp.Tail = newSongNode
 	}
-	counter++ // increase lenght
+	counter++ // increase length
 
 	fmt.Printf("New Song %v added successfully\n", songData.ID)
 
