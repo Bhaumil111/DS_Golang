@@ -2,60 +2,107 @@ package main
 
 import (
 	"fmt"
-	"hash/fnv"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
-type Node struct {
-	key string
-	val string
+type User struct {
+	UserName string
+	Password string // it should be stored as hashed password
 }
 
-// one particular bucket make
+type UserMap struct {
+	Data map[string]*User
+}
 
-const LoadFactor = 6.5 // This is my threshold loadfactor . live loadfactor calculate based on division of ( total no of key value pair )  /  total no of buckets
+func NewUser() *UserMap {
+	return &UserMap{
+		Data: make(map[string]*User), // initialize map
+	}
+}
 
-// when live loadfactor exceeds threshold then i double my capacity of Datalist in Custom maps
+// making method to append users to the system
 
-type Bucket struct { // this is main storage means a bucket hold real data means key value pair // all each bucket has overflow pointer which points to next bucket like linkedlist
+func (mp *UserMap) addUser(userData User) {
 
-	Data            *[8]Node // fixed 8 sized array in which KV stored
-	OverflowPointer *Bucket  // overflow pointer which points to new bucket where our LF exceeds load factor
+	// convert password into hash
+
+	hashPassword, err := HashPassword(userData.Password)
+	// In this function we simply add that mp element to the Data
+	if err != nil {
+		fmt.Println("Error storing user data")
+		return
+
+	}
+
+	mp.Data[userData.UserName] = &User{
+		UserName: userData.UserName,
+		Password: hashPassword,
+	} // storing address to user
+
+	fmt.Printf("User %v added successfully\n", userData.UserName)
 
 }
 
-// my custom_map
-type CustomMap struct {
-	BucketList []Bucket // my maps has a list of buckets
+// in this method we simply check whether the user is authenticated or not
 
+func (mp *UserMap) checkAuthentication(userData User) {
+	val, ok := mp.Data[userData.UserName] // checking our username is authenticated or not
+
+	if !ok { // means it is not authenticated
+		fmt.Printf("User %v not found\n", userData.UserName)
+		return
+	}
+
+	// now compare password if password matches with hash then ok
+
+	userHash := val.Password // this contain hash password for this user
+
+	flag := CheckPasswordHash(userData.Password, userHash)
+
+	if !flag {
+		fmt.Printf("User %v password is not correct\n", userData.UserName)
+		return
+	}
+
+	fmt.Printf("User %v password is correct . Successfully Authenticated\n", userData.UserName)
 }
 
-// Method for calculating hash function based on the slice of bucket
-
-func hashIndex(username string, size int) int {
-	h := fnv.New32a()               // creating a hash calculator
-	h.Write([]byte(username))       // john --- 'j' , 'o', 'h' , 'n' then based that each it calculate my hash number
-	hashValue := h.Sum32()          // it give me hash
-	idx := hashValue % uint32(size) // your idx based on size
-	fmt.Printf("Calculated hash is %v  and idx is %v for string %v\n", hashValue, size, username)
-	return int(idx)
+// this function hashes my password
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
 }
 
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
+}
+
+// making user login system
 func main() {
 
-	fmt.Println("Implementing custom map in golang \n")
+	fmt.Println("Making User login system ")
 
-	// now
+	mp := NewUser()
 
-	a := hashIndex("Bhaumil", 8)
-	b := hashIndex("Raj", 8)
-	c := hashIndex("Manav", 8)
-	d := hashIndex("Bhaumil", 8)
-	e := hashIndex("Bhaumil", 8)
+	//fmt.Println(mp)
+	//fmt.Println(mp.Data)
+	Users := []User{
+		{UserName: "alice", Password: "pass123"},
+		{UserName: "bob", Password: "bob@321"},
+		{UserName: "charlie", Password: "charlie12"},
+		{UserName: "david", Password: "david!45"},
+		{UserName: "emma", Password: "emma2024"},
+	}
 
-	fmt.Println(a)
-	fmt.Println(b)
-	fmt.Println(c)
-	fmt.Println(d)
-	fmt.Println(e)
+	mp.addUser(Users[0])
+	mp.addUser(Users[1])
+	mp.addUser(Users[2])
+
+	mp.checkAuthentication(Users[0]) // for checking authentication
+	mp.checkAuthentication(Users[1])
+	mp.checkAuthentication(User{"alice", "pass122"}) // wrong password
+	mp.checkAuthentication(Users[3])                 // no entry
 
 }
